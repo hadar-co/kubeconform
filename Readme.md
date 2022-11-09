@@ -168,7 +168,7 @@ in each of them, in order, stopping as soon as a matching file is found.
  structure identical to that of kubernetesjsonschema.dev or github.com/yannh/kubernetes-json-schema.
  * if the -schema-location value ends with '.json' - **Kubeconform** assumes the value is a Go templated
  string that indicates how to search for JSON schemas.
-* the -schema-location value of "default" is an alias for "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}{{ .KindSuffix }}.json".
+* the -schema-location value of `default` is an alias for `https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}{{ .KindSuffix }}.json`.
 
 Both following command lines are equivalent:
 ```bash
