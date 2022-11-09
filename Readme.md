@@ -194,28 +194,22 @@ Therefore, if your CRs already included in [Datree's CRDs-catalog](https://githu
 $ kubeconform -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' [MANIFEST]
 ```
 
-If your CRs are not included in the CRDs-catalog, you will need to manually pull the CRDs manifests from your cluster and convert the `OpenAPI.spec` to JSON schema format:
+If your CRs are not included in the CRDs-catalog, you will need to manually pull the CRDs manifests from your cluster and convert the `OpenAPI.spec` to JSON schema format.
 
-```bash
-# If the resource Kind is not found in deafult, also lookup in the schemas/ folder for a matching file
-$ kubeconform -schema-location default -schema-location 'schemas/{{ .ResourceKind }}{{ .KindSuffix }}.json' fixtures/custom-resource.yaml
-```
 
 <details><summary>Converting an OpenAPI file to a JSON Schema</summary>
 <p>
-
-#### Converting `OpenAPI.spec` to JSON schema format
 
 Kubeconform uses JSON schemas to validate Kubernetes resources. For Custom Resource, the CustomResourceDefinition
 first needs to be converted to JSON Schema. A script is provided to convert these CustomResourceDefinitions
 to JSON schema. Here is an example how to use it:
 
 ```bash
-$ ./scripts/openapi2jsonschema.py https://raw.githubusercontent.com/aws/amazon-sagemaker-operator-for-k8s/master/config/crd/bases/sagemaker.aws.amazon.com_trainingjobs.yaml
+$ python ./scripts/openapi2jsonschema.py https://raw.githubusercontent.com/aws/amazon-sagemaker-operator-for-k8s/master/config/crd/bases/sagemaker.aws.amazon.com_trainingjobs.yaml
 JSON schema written to trainingjob_v1.json
 ```
 
-The `FILENAME_FORMAT` environment variable can be used to change the output file name (Available variables: `kind`, `group`, `version`) (Default: `{kind}_{version}`).
+By default, the file name output format is `{kind}_{version}`. The `FILENAME_FORMAT` environment variable can be used to change the output file name (Available variables: `kind`, `group`, `version`):
 
 ```
 $ export FILENAME_FORMAT='{kind}-{group}-{version}'
@@ -223,21 +217,29 @@ $ ./scripts/openapi2jsonschema.py https://raw.githubusercontent.com/aws/amazon-s
 JSON schema written to trainingjob-sagemaker-v1.json
 ```
 
-<p class="callout info">The CRD Extractor (https://github.com/datreeio/CRDs-catalog#crd-extractor) is a utility that can be used instead of this manual process</p>
+Now you can use `kubeconform` to validate your CRs against your local JSON schema files:
+
+```bash
+# If the resource Kind is not found in deafult, also lookup in the schemas/ folder for a matching file
+$ kubeconform -schema-location default -schema-location 'schemas/{{ .ResourceKind }}{{ .KindSuffix }}.json' fixtures/custom-resource.yaml
+```
+
+ℹ️ The [CRD Extractor](https://github.com/datreeio/CRDs-catalog#crd-extractor) is a utility that can be used instead of this manual process.
 
 </p>
 </details>
 
 #### OpenShift schema Support
 
-You can validate Openshift manifests using a custom schema location. Set the OpenShift version to validate
+You can validate Openshift manifests using a custom schema location. Set the OpenShift version (v3.10.0-4.1.0) to validate
 against using -kubernetes-version.
 
 ```bash
 kubeconform -kubernetes-version 3.8.0  -schema-location 'https://raw.githubusercontent.com/garethr/openshift-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}.json'  -summary fixtures/valid.yaml
 Summary: 1 resource found in 1 file - Valid: 1, Invalid: 0, Errors: 0 Skipped: 0
 ```
-<p class="callout info">OpenShift version support: 3.10.0-4.1.0</p>
+
+ℹ️ If a newer version OpenShift is required to validate against, you can use [this guide](https://cloud.redhat.com/blog/validating-openshift-manifests-in-a-gitops-world) to create JSON schema files from your own cluster. 
 
 ### Usage as a Github Action
 
