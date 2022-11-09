@@ -159,16 +159,16 @@ Summary: 65 resources found in 34 files - Valid: 55, Invalid: 2, Errors: 8 Skipp
 
 ### Overriding schemas location
 
-When the `-schema-location` parameter is not used, or set to "default", `kubeconform` will default to downloading
-schemas from `https://github.com/yannh/kubernetes-json-schema`. `Kubeconform` however supports passing one, or multiple,
+When the `-schema-location` parameter is not used, or set to "default", **kubeconform** will default to downloading
+schemas from `https://github.com/yannh/kubernetes-json-schema`. **Kubeconform** however supports passing one, or multiple,
 schemas locations - HTTP(s) URLs, or local filesystem paths, in which case it will lookup for schema definitions
 in each of them, in order, stopping as soon as a matching file is found.
 
- * If the -schema-location value does not end with '.json', `Kubeconform` will assume filenames / a file
+ * If the -schema-location value does not end with '.json', **Kubeconform** will assume filenames / a file
  structure identical to that of kubernetesjsonschema.dev or github.com/yannh/kubernetes-json-schema.
- * if the -schema-location value ends with '.json' - `Kubeconform` assumes the value is a Go templated
+ * if the -schema-location value ends with '.json' - **Kubeconform** assumes the value is a Go templated
  string that indicates how to search for JSON schemas.
-* the -schema-location value of "default" is an alias for https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}{{ .KindSuffix }}.json.
+* the -schema-location value of "default" is an alias for "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}{{ .KindSuffix }}.json".
 
 Both following command lines are equivalent:
 ```bash
