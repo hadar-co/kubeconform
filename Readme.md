@@ -108,7 +108,7 @@ $ echo $?
 ```
 
 * Validating a single invalid file, setting output to json, and printing a summary
-```json
+```bash
 $ kubeconform -summary -output json fixtures/invalid.yaml
 {
   "resources": [
