@@ -11,37 +11,37 @@
 It is inspired by, contains code from and is designed to stay close to
 [Kubeval](https://github.com/instrumenta/kubeval), but with the following improvements:
  * **high performance**: will validate & download manifests over multiple routines, caching
-   downloaded files in memory
+   downloaded files in memory  
+   <details><summary><h4>Speed comparison with Kubeval</h4></summary>
+      <p>
+
+      Running on a pretty large kubeconfigs setup, on a laptop with 4 cores:
+
+      ```bash
+      $ time kubeconform -ignore-missing-schemas -n 8 -summary  preview staging production
+      Summary: 50714 resources found in 35139 files - Valid: 27334, Invalid: 0, Errors: 0 Skipped: 23380
+
+      real	0m6,710s
+      user	0m38,701s
+      sys	0m1,161s
+
+      $ time kubeval -d preview,staging,production --ignore-missing-schemas --quiet
+      [... Skipping output]
+
+      real	0m35,336s
+      user	0m0,717s
+      sys	0m1,069s
+
+      ```
+
+      </p>
+   </details>
  * configurable list of **remote, or local schemas locations**, enabling validating Kubernetes
    custom resources (CRDs) and offline validation capabilities
  * uses by default a [self-updating fork](https://github.com/yannh/kubernetes-json-schema) of the schemas registry maintained
    by the kubernetes-json-schema project - which guarantees
    up-to-date **schemas for all recent versions of Kubernetes**.
    
-<details><summary><h3>Speed comparison with Kubeval</h3></summary>
-<p>
-
-Running on a pretty large kubeconfigs setup, on a laptop with 4 cores:
-
-```bash
-$ time kubeconform -ignore-missing-schemas -n 8 -summary  preview staging production
-Summary: 50714 resources found in 35139 files - Valid: 27334, Invalid: 0, Errors: 0 Skipped: 23380
-
-real	0m6,710s
-user	0m38,701s
-sys	0m1,161s
-
-$ time kubeval -d preview,staging,production --ignore-missing-schemas --quiet
-[... Skipping output]
-
-real	0m35,336s
-user	0m0,717s
-sys	0m1,069s
-
-```
-
-</p>
-</details>
 
 ## Table of contents
 
