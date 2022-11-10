@@ -19,9 +19,7 @@ It is inspired by, contains code from and is designed to stay close to
    up-to-date **schemas for all recent versions of Kubernetes**.
    
 <details>
-   <summary>
-      <h4>Speed comparison with Kubeval</h4>
-   </summary>
+   <summary><h4>Speed comparison with Kubeval</h4></summary>
    <p>
       Running on a pretty large kubeconfigs setup, on a laptop with 4 cores:
       ```bash
