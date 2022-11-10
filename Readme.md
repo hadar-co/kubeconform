@@ -18,7 +18,14 @@ It is inspired by, contains code from and is designed to stay close to
    by the kubernetes-json-schema project - which guarantees
    up-to-date **schemas for all recent versions of Kubernetes**.
 
-### A small overview of Kubernetes manifest validation
+## Table of contents
+
+* A small overview of Kubernetes manifest validation
+  * Limits of Kubeconform validation
+* Installation
+* Usage
+
+## A small overview of Kubernetes manifest validation
 
 Kubernetes's API is described using the [OpenAPI (formerly swagger) specification](https://www.openapis.org),
 in a [file](https://github.com/kubernetes/kubernetes/blob/master/api/openapi-spec/swagger.json) checked into
@@ -36,9 +43,9 @@ that is more aggressively kept up-to-date, and contains schemas for all recent v
 
 ### Limits of Kubeconform validation
 
-`Kubeconform`, similar to `kubeval`, only validates manifests using the official Kubernetes OpenAPI specifications. The Kubernetes controllers still perform additional server-side validations that are not part of the OpenAPI specifications. Those server-side validations are not covered by `Kubeconform` (examples: [#65](https://github.com/yannh/kubeconform/issues/65), [#122](https://github.com/yannh/kubeconform/issues/122), [#142](https://github.com/yannh/kubeconform/issues/142)). You can use a 3rd-party tool or the kubectl --dry-run=server command to fill the missing (validation) gap.
+`Kubeconform`, similar to `kubeval`, only validates manifests using the official Kubernetes OpenAPI specifications. The Kubernetes controllers still perform additional server-side validations that are not part of the OpenAPI specifications. Those server-side validations are not covered by `Kubeconform` (examples: [#65](https://github.com/yannh/kubeconform/issues/65), [#122](https://github.com/yannh/kubeconform/issues/122), [#142](https://github.com/yannh/kubeconform/issues/142)). You can use a 3rd-party tool or the `kubectl --dry-run=server` command to fill the missing (validation) gap.
 
-### Installation
+## Installation
 
 If you are a [Homebrew](https://brew.sh/) user, you can install by running:
 
@@ -58,7 +65,7 @@ $ go install github.com/yannh/kubeconform/cmd/kubeconform@v0.4.13
 $ go install github.com/yannh/kubeconform/cmd/kubeconform@latest
 ```
 
-### Usage
+## Usage
 
 ```bash
 $ kubeconform -h
@@ -156,7 +163,7 @@ fixtures/invalid.yaml - ReplicationController bob is invalid: Invalid type. Expe
 Summary: 65 resources found in 34 files - Valid: 55, Invalid: 2, Errors: 8 Skipped: 0
 ```
 
-### Overriding schemas location
+## Overriding schemas location
 
 When the `-schema-location` parameter is not used, or set to "default", **kubeconform** will default to downloading
 schemas from `https://github.com/yannh/kubernetes-json-schema`. **Kubeconform** however supports passing one, or multiple,
@@ -183,7 +190,7 @@ Here are the variables you can use in -schema-location:
  * *Group* - the group name as stated in this resource's definition - "monitoring.coreos.com" in "apiVersion: monitoring.coreos.com/v1"
  * *KindSuffix* - suffix computed from apiVersion - for compatibility with `Kubeval` schema registries
 
-#### CustomResourceDefinition (CRD) Support
+### CustomResourceDefinition (CRD) Support
 
 Because Custom Resources (CR) are not native Kubernetes objects, they are not included in the default schema.  
 Therefore, if your CRs already included in [Datree's CRDs-catalog](https://github.com/datreeio/CRDs-catalog), you can specify this project as an additional registry to lookup:
@@ -227,7 +234,7 @@ $ kubeconform -schema-location default -schema-location 'schemas/{{ .ResourceKin
 </p>
 </details>
 
-#### OpenShift schema Support
+### OpenShift schema Support
 
 You can validate Openshift manifests using a custom schema location. Set the OpenShift version (v3.10.0-4.1.0) to validate
 against using `-kubernetes-version`.
