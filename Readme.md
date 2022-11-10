@@ -36,8 +36,7 @@ that is more aggressively kept up-to-date, and contains schemas for all recent v
 
 ### Limits of Kubeconform validation
 
-`Kubeconform`, in similar to `kubeval`, only validates manifests using the OpenAPI specifications. 
-There are some additional server-side validations that are not part of the OpenAPI specifications and preformed by the Kubernetes controllers. Those server-side validations are not covered by `Kubeconform` (examples: [#65](https://github.com/yannh/kubeconform/issues/65), [#122](https://github.com/yannh/kubeconform/issues/122), [#142](https://github.com/yannh/kubeconform/issues/142)). You can use a 3rd-party tool or the `kubectl --dry-run=server` command to fill the missing gap.
+`Kubeconform`, similar to `kubeval`, only validates manifests using the official Kubernetes OpenAPI specifications. The Kubernetes controllers still perform additional server-side validations that are not part of the OpenAPI specifications. Those server-side validations are not covered by `Kubeconform` (examples: [#65](https://github.com/yannh/kubeconform/issues/65), [#122](https://github.com/yannh/kubeconform/issues/122), [#142](https://github.com/yannh/kubeconform/issues/142)). You can use a 3rd-party tool or the kubectl --dry-run=server command to fill the missing (validation) gap.
 
 ### Installation
 
@@ -196,11 +195,10 @@ $ kubeconform -schema-location default -schema-location 'https://raw.githubuserc
 
 If your CRs are not included in the CRDs-catalog, you will need to manually pull the CRDs manifests from your cluster and convert the `OpenAPI.spec` to JSON schema format.
 
-
 <details><summary>Converting an OpenAPI file to a JSON Schema</summary>
 <p>
 
-Kubeconform uses JSON schemas to validate Kubernetes resources. For Custom Resource, the CustomResourceDefinition
+`Kubeconform` uses JSON schemas to validate Kubernetes resources. For Custom Resource, the CustomResourceDefinition
 first needs to be converted to JSON Schema. A script is provided to convert these CustomResourceDefinitions
 to JSON schema. Here is an example how to use it:
 
@@ -217,7 +215,7 @@ $ ./scripts/openapi2jsonschema.py https://raw.githubusercontent.com/aws/amazon-s
 JSON schema written to trainingjob-sagemaker-v1.json
 ```
 
-Now you can use `kubeconform` to validate your CRs against your local JSON schema files:
+After converting your CRDs to JSON schema files, you can use `kubeconform` to validate your CRs against them:
 
 ```bash
 # If the resource Kind is not found in deafult, also lookup in the schemas/ folder for a matching file
@@ -232,14 +230,12 @@ $ kubeconform -schema-location default -schema-location 'schemas/{{ .ResourceKin
 #### OpenShift schema Support
 
 You can validate Openshift manifests using a custom schema location. Set the OpenShift version (v3.10.0-4.1.0) to validate
-against using -kubernetes-version.
+against using `-kubernetes-version`.
 
 ```bash
 kubeconform -kubernetes-version 3.8.0  -schema-location 'https://raw.githubusercontent.com/garethr/openshift-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}.json'  -summary fixtures/valid.yaml
 Summary: 1 resource found in 1 file - Valid: 1, Invalid: 0, Errors: 0 Skipped: 0
 ```
-
-ℹ️ If a newer version OpenShift is required to validate against, you can use [this guide](https://cloud.redhat.com/blog/validating-openshift-manifests-in-a-gitops-world) to create JSON schema files from your own cluster. 
 
 ### Usage as a Github Action
 
