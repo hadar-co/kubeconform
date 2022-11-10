@@ -207,8 +207,8 @@ in each of them, in order, stopping as soon as a matching file is found.
 
  * If the `-schema-location` value does not end with `.json`, Kubeconform will assume filenames / a file
  structure identical to that of [kubernetesjsonschema.dev](https://kubernetesjsonschema.dev/) or [yannh/kubernetes-json-schema](https://github.com/yannh/kubernetes-json-schema).
- * if the `-schema-location` value ends with `.json` - Kubeconform assumes the value is a Go templated
- string that indicates how to search for JSON schemas.
+ * if the `-schema-location` value ends with `.json` - Kubeconform assumes the value is a **Go templated
+ string** that indicates how to search for JSON schemas.
 * the `-schema-location` value of `default` is an alias for `https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{.NormalizedKubernetesVersion}}-standalone{{.StrictSuffix}}/{{.ResourceKind}}{{.KindSuffix}}.json`.
 
 **The following command lines are equivalent:**
