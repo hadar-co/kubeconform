@@ -11,7 +11,13 @@
 It is inspired by, contains code from and is designed to stay close to
 [Kubeval](https://github.com/instrumenta/kubeval), but with the following improvements:
  * **high performance**: will validate & download manifests over multiple routines, caching
-   downloaded files in memory  
+   downloaded files in memory
+ * configurable list of **remote, or local schemas locations**, enabling validating Kubernetes
+   custom resources (CRDs) and offline validation capabilities
+ * uses by default a [self-updating fork](https://github.com/yannh/kubernetes-json-schema) of the schemas registry maintained
+   by the kubernetes-json-schema project - which guarantees
+   up-to-date **schemas for all recent versions of Kubernetes**.
+   
    <details><summary><h4>Speed comparison with Kubeval</h4></summary>
       <p>
 
@@ -36,12 +42,6 @@ It is inspired by, contains code from and is designed to stay close to
 
       </p>
    </details>
- * configurable list of **remote, or local schemas locations**, enabling validating Kubernetes
-   custom resources (CRDs) and offline validation capabilities
- * uses by default a [self-updating fork](https://github.com/yannh/kubernetes-json-schema) of the schemas registry maintained
-   by the kubernetes-json-schema project - which guarantees
-   up-to-date **schemas for all recent versions of Kubernetes**.
-   
 
 ## Table of contents
 
