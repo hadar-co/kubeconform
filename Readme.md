@@ -6,7 +6,7 @@
 [![Go Report card](https://goreportcard.com/badge/github.com/yannh/kubeconform)](https://goreportcard.com/report/github.com/yannh/kubeconform)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/yannh/kubeconform/pkg/validator)](https://pkg.go.dev/github.com/yannh/kubeconform/pkg/validator)
 
-`Kubeconform` is a Kubernetes manifests validation tool. Build it into your CI, or use it locally to validate your Kubernetes configuration!
+`Kubeconform` is a Kubernetes manifest validation tool. Incorporate it into your CI, or use it locally to validate your Kubernetes configuration!
 
 It is inspired by, contains code from and is designed to stay close to
 [Kubeval](https://github.com/instrumenta/kubeval), but with the following improvements:
@@ -66,7 +66,7 @@ and break it down into multiple JSON schemas, stored in github at
 [kubernetesjsonschema.dev](https://kubernetesjsonschema.dev/).
 
 `Kubeconform` relies on [a fork of kubernetes-json-schema](https://github.com/yannh/kubernetes-json-schema/)
-that is more aggressively kept up-to-date, and contains schemas for all recent versions of Kubernetes.
+that is more meticulously kept up-to-date, and contains schemas for all recent versions of Kubernetes.
 
 ### Limits of Kubeconform validation
 
@@ -228,14 +228,14 @@ Here are the variables you can use in -schema-location:
 ### CustomResourceDefinition (CRD) Support
 
 Because Custom Resources (CR) are not native Kubernetes objects, they are not included in the default schema.  
-Therefore, if your CRs already included in [Datree's CRDs-catalog](https://github.com/datreeio/CRDs-catalog), you can specify this project as an additional registry to lookup:
+If your CRs are present in [Datree's CRDs-catalog](https://github.com/datreeio/CRDs-catalog), you can specify this project as an additional registry to lookup:
   
 ```bash
-# If the resource Kind is not found in deafult, also lookup in the CRDs-catalog for a matching file
+# Look in the CRDs-catalog for the desired schema/s
 $ kubeconform -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' [MANIFEST]
 ```
 
-If your CRs are not included in the CRDs-catalog, you will need to manually pull the CRDs manifests from your cluster and convert the `OpenAPI.spec` to JSON schema format.
+If your CRs are not present in the CRDs-catalog, you will need to manually pull the CRDs manifests from your cluster and convert the `OpenAPI.spec` to JSON schema format.
 
 <details><summary>Converting an OpenAPI file to a JSON Schema</summary>
 <p>
@@ -264,7 +264,7 @@ After converting your CRDs to JSON schema files, you can use `kubeconform` to va
 $ kubeconform -schema-location default -schema-location 'schemas/{{ .ResourceKind }}{{ .KindSuffix }}.json' fixtures/custom-resource.yaml
 ```
 
-ℹ️ The [CRD Extractor](https://github.com/datreeio/CRDs-catalog#crd-extractor) is a utility that can be used instead of this manual process.
+ℹ️ Datree's [CRD Extractor](https://github.com/datreeio/CRDs-catalog#crd-extractor) is a utility that can be used instead of this manual process.
 
 </p>
 </details>
