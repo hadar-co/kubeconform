@@ -17,6 +17,31 @@ It is inspired by, contains code from and is designed to stay close to
  * uses by default a [self-updating fork](https://github.com/yannh/kubernetes-json-schema) of the schemas registry maintained
    by the kubernetes-json-schema project - which guarantees
    up-to-date **schemas for all recent versions of Kubernetes**.
+   
+<details><summary><h3>Speed comparison with Kubeval</h3></summary>
+<p>
+
+Running on a pretty large kubeconfigs setup, on a laptop with 4 cores:
+
+```bash
+$ time kubeconform -ignore-missing-schemas -n 8 -summary  preview staging production
+Summary: 50714 resources found in 35139 files - Valid: 27334, Invalid: 0, Errors: 0 Skipped: 23380
+
+real	0m6,710s
+user	0m38,701s
+sys	0m1,161s
+
+$ time kubeval -d preview,staging,production --ignore-missing-schemas --quiet
+[... Skipping output]
+
+real	0m35,336s
+user	0m0,717s
+sys	0m1,069s
+
+```
+
+</p>
+</details>
 
 ## Table of contents
 
@@ -24,6 +49,16 @@ It is inspired by, contains code from and is designed to stay close to
   * Limits of Kubeconform validation
 * Installation
 * Usage
+  * Usage examples
+  * Proxy support
+* Overriding schemas location
+  * CustomResourceDefinition (CRD) Support
+  * OpenShift schema Support
+* Integrating Kubeconform in the CI
+  * Github Workflow
+  * Gitlab-CI
+* Using kubeconform as a Go Module
+* Credits
 
 ## A small overview of Kubernetes manifest validation
 
@@ -163,6 +198,14 @@ fixtures/invalid.yaml - ReplicationController bob is invalid: Invalid type. Expe
 Summary: 65 resources found in 34 files - Valid: 55, Invalid: 2, Errors: 8 Skipped: 0
 ```
 
+### Proxy support
+
+`Kubeconform` will respect the **HTTPS_PROXY** variable when downloading schema files.
+
+```bash
+$ HTTPS_PROXY=proxy.local bin/kubeconform fixtures/valid.yaml
+```
+
 ## Overriding schemas location
 
 When the `-schema-location` parameter is not used, or set to "default", **kubeconform** will default to downloading
@@ -244,10 +287,12 @@ kubeconform -kubernetes-version 3.8.0  -schema-location 'https://raw.githubuserc
 Summary: 1 resource found in 1 file - Valid: 1, Invalid: 0, Errors: 0 Skipped: 0
 ```
 
-### Usage as a Github Action
+## Integrating Kubeconform in the CI
 
-Kubeconform publishes Docker Images to Github's new Container Registry, ghcr.io. These images
+`Kubeconform` publishes Docker Images to Github's new Container Registry (ghcr.io). These images
 can be used directly in a Github Action, once logged in using a [_Github Token_](https://github.blog/changelog/2021-03-24-packages-container-registry-now-supports-github_token/).
+
+### Github Workflow
 
 Example:
 ```yaml
@@ -272,7 +317,7 @@ bandwidth costs might be applicable. Since bandwidth from Github Packages within
 Github Container Registry to also be usable for free within Github Actions in the future. If that were not to be the
 case, I might publish the Docker image to a different platform.
 
-### Usage in Gitlab-CI
+### Gitlab-CI
 
 The Kubeconform Docker image can be used in Gitlab-CI. Here is an example of a Gitlab-CI job:
 
@@ -288,35 +333,7 @@ lint-kubeconform:
 
 See [issue 106](https://github.com/yannh/kubeconform/issues/106) for more details.
 
-### Proxy support
-
-Kubeconform will respect the HTTPS_PROXY variable when downloading schema files.
-
-```
-$ HTTPS_PROXY=proxy.local bin/kubeconform fixtures/valid.yaml
-```
-### Speed comparison with Kubeval
-
-Running on a pretty large kubeconfigs setup, on a laptop with 4 cores:
-
-```bash
-$ time kubeconform -ignore-missing-schemas -n 8 -summary  preview staging production
-Summary: 50714 resources found in 35139 files - Valid: 27334, Invalid: 0, Errors: 0 Skipped: 23380
-
-real	0m6,710s
-user	0m38,701s
-sys	0m1,161s
-
-$ time kubeval -d preview,staging,production --ignore-missing-schemas --quiet
-[... Skipping output]
-
-real	0m35,336s
-user	0m0,717s
-sys	0m1,069s
-
-```
-
-### Using kubeconform as a Go Module
+## Using kubeconform as a Go Module
 
 **Warning**: This is a work-in-progress, the interface is not yet considered stable. Feedback is encouraged.
 
@@ -325,7 +342,7 @@ An example of usage can be found in [examples/main.go](examples/main.go)
 
 Additional documentation on [pkg.go.dev](https://pkg.go.dev/github.com/yannh/kubeconform/pkg/validator)
 
-### Credits
+## Credits
 
  * @garethr for the [Kubeval](https://github.com/instrumenta/kubeval) and
  [kubernetes-json-schema](https://github.com/instrumenta/kubernetes-json-schema) projects ❤️
